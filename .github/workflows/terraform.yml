@@ -16,6 +16,7 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
     runs-on: ubuntu-latest
     environment: production
+
  
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -33,6 +34,12 @@ jobs:
         tf_actions_version: 0.14.8
         tf_actions_subcommand: 'fmt'
         tf_actions_working_dir: "./terraform"
+    
+    - name: Save variable
+      run: echo "SOMENAME=PICKLE" >> $GITHUB_STATE
+
+    - name: Set output
+      run: echo "SOMENAME=PICKLE" >> $GITHUB_OUTPUT
          
     - name: 'Terraform Init'
       uses: hashicorp/terraform-github-actions@master
@@ -41,13 +48,7 @@ jobs:
         tf_actions_subcommand: 'init'
         tf_actions_working_dir: "./terraform"
 
-    - name: terraform
-      id: output
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-    
-    - name: terraform version
-      id: get_version
-      run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_OUTPUT
+
  
     - name: 'Terraform Validate'
       uses: hashicorp/terraform-github-actions@master
