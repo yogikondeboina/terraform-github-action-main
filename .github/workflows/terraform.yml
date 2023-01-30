@@ -40,11 +40,14 @@ jobs:
         tf_actions_version: 0.14.8
         tf_actions_subcommand: 'init'
         tf_actions_working_dir: "./terraform"
-    - name: Set output
-      id: stepid
-      run: echo "count=5" >> $GITHUB_OUTPUT
-    - name: Use prior output
-      run: echo "The count was ${{ steps.stepid.outputs.count }}
+
+    - name: terraform
+      id: output
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+    
+    - name: terraform version
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_OUTPUT
  
     - name: 'Terraform Validate'
       uses: hashicorp/terraform-github-actions@master
